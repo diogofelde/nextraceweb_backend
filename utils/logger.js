@@ -1,5 +1,15 @@
-const fs = require('fs');
-function logErro(mensagem) {
-    const linha = `[${new Date().toISOString()}] ${mensagem}\n`;
-    fs.appendFileSync('logs/erros.log', linha);
-}
+import winston from 'winston';
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'logs/app.log' })
+  ]
+});
+
+export default logger;

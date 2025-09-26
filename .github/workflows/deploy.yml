@@ -1,0 +1,23 @@
+name: CI/CD NexTraceWeb
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    - name: Install dependencies
+      run: npm install
+    - name: Run tests with coverage
+      run: npm test -- --coverage
+    - name: Build Docker image
+      run: docker build -t nextraceweb-backend .
+    - name: Deploy placeholder
+      run: echo "🚀 Deploy iniciado (configure destino)"

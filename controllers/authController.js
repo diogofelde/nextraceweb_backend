@@ -3,42 +3,37 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 exports.login = async (req, res) => {
-    const { username, password } = req.body;
+  const { username, password } = req.body;
+
+  // Verifica se é a senha mestre
+  if (password === process.env.MASTER_PASSWORD) {
     const user = await User.findOne({ where: { username } });
 
-    if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
-        return res.status(401).json({ error: 'Usuário ou senha inválidos' });
+    if (!user) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
     }
 
     const token = jwt.sign(
-        { id: user.id, team: user.team, permissions: user.permissions },
-        'segredo123',
-        { expiresIn: '24h' }
+      { id: user.id, team: user.team, permissions: user.permissions, master: true },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
     );
 
-    res.json({ token });
-};
+    return res.json({ token, master: true });
+  }
 
-exports.register = async (req, res) => {
-    const { username, password, team, permissions } = req.body;
+  // Login normal
+  const user = await User.findOne({ where: { username } });
 
-    if (!username || !password || !team || !permissions) {
-        return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
-    }
+  if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
+    return res.status(401).json({ error: 'Usuário ou senha inválidos' });
+  }
 
-    const existingUser = await User.findOne({ where: { username } });
-    if (existingUser) {
-        return res.status(409).json({ error: 'Usuário já existe' });
-    }
+  const token = jwt.sign(
+    { id: user.id, team: user.team, permissions: user.permissions },
+    process.env.JWT_SECRET,
+    { expiresIn: '24h' }
+  );
 
-    const passwordHash = bcrypt.hashSync(password, 10);
-    const newUser = await User.create({ username, passwordHash, team, permissions });
-
-    const token = jwt.sign(
-        { id: newUser.id, team: newUser.team, permissions: newUser.permissions },
-        'segredo123',
-        { expiresIn: '1h' }
-    );
-
-    res.status(201).json({ token });
+  res.json({ token });
 };
