@@ -1,36 +1,40 @@
 # Dependências
 node_modules/
 
+# Banco de dados local
+*.sqlite
+*.db
+
 # Logs
 logs/
 *.log
 
-# Configs locais
+# Configurações locais e variáveis de ambiente
 .env
 *.local
+*.env.local
 
-# IDEs
+# Diretórios e arquivos de IDEs
 .vscode/
 !.vscode/extensions.json
 .idea/
-.DS_Store
-
-# Builds temporários
-coverage/
-tmp/
-
-# Arquivos de sistema e editor
 .vs/
-*.vsidx
 *.suo
 *.user
-*.db
-*.sqlite
+*.vsidx
+.DS_Store
+
+# Arquivos temporários e de cobertura de testes
+coverage/
+tmp/
 
 # Scripts auxiliares
 *.bat
 *.ps1
 
-# Docker e ambiente
+# Arquivos de sistema
+Thumbs.db
+ehthumbs.db
+
+# Docker (opcional)
 docker-compose.yml
-*.env.local

@@ -1,21 +1,48 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import sequelize from '../config/database.js';
+import dotenv from 'dotenv';
+import User from '../models/User.js';
+
+dotenv.config();
 
 const router = express.Router();
 
-// Exemplo de rota protegida
-router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+// Rota de registro
+router.post('/register', async (req, res) => {
+    const { username, email, matricula, password, team, permissions, role } = req.body;
 
-    // Simulação de validação (substitua com lógica real)
-    if (username === 'admin' && password === 'admin') {
-        const token = jwt.sign({ username }, 'seuSegredoJWT', { expiresIn: '1h' });
-        return res.json({ token });
+    try {
+        // Verifica se usuário já existe
+        const existingUser = await User.findOne({ where: { username } });
+        if (existingUser) {
+            return res.status(409).json({ error: 'Usuário já existe' });
+        }
+
+        // Criptografa a senha
+        const passwordHash = await bcrypt.hash(password, 10);
+
+        // Cria novo usuário
+        const newUser = await User.create({
+            username,
+            email,
+            matricula,
+            passwordHash,
+            team,
+            permissions,
+            role
+        });
+
+        // Gera token JWT
+        const token = jwt.sign({ id: newUser.id, username: newUser.username }, process.env.JWT_SECRET, {
+            expiresIn: '1h'
+        });
+
+        res.status(201).json({ message: 'Usuário criado com sucesso', token });
+    } catch (error) {
+        console.error('Erro no registro:', error);
+        res.status(500).json({ error: 'Erro interno do servidor' });
     }
-
-    res.status(401).json({ error: 'Credenciais inválidas' });
 });
 
 export default router;
