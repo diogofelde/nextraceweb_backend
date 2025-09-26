@@ -1,0 +1,36 @@
+# Dependências
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Configs locais
+.env
+*.local
+
+# IDEs
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+
+# Builds temporários
+coverage/
+tmp/
+
+# Arquivos de sistema e editor
+.vs/
+*.vsidx
+*.suo
+*.user
+*.db
+*.sqlite
+
+# Scripts auxiliares
+*.bat
+*.ps1
+
+# Docker e ambiente
+docker-compose.yml
+*.env.local
