@@ -1,8 +1,18 @@
 import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
 
-const sequelize = new Sequelize('nextrace_db', 'usuario', 'senha', {
-    host: 'localhost',
-    dialect: 'postgres'
-});
+dotenv.config();
+
+const sequelize = new Sequelize(
+  process.env.DB_NAME || 'nextrace_db',
+  process.env.DB_USER || 'usuario',
+  process.env.DB_PASSWORD || 'senha',
+  {
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 5432,
+    dialect: 'postgres',
+    logging: false, // desativa logs SQL no console
+  }
+);
 
 export default sequelize;
