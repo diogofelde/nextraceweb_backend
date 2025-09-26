@@ -23,25 +23,25 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 
-// ✅ Rotas
+// Rotas
 app.use('/api', authRoutes);
 
 // Rota de teste
 app.get('/api/ping', (req, res) => {
-    res.status(200).json({ message: '✅ Backend ativo e respondendo!' });
+    res.status(200).json({ message: 'Backend ativo e respondendo' });
 });
 
 // Inicialização do banco
 sequelize.authenticate()
     .then(() => {
-        console.log('✅ Conectado ao banco de dados com sucesso.');
+        console.log('Conectado ao banco de dados com sucesso.');
         return sequelize.sync();
     })
     .then(() => {
         app.listen(PORT, () => {
-            console.log(`🚀 Backend rodando na porta ${PORT}`);
+            console.log(`Backend rodando na porta ${PORT}`);
         });
     })
     .catch((err) => {
-        console.error('❌ Erro ao conectar com o banco de dados:', err);
+        console.error('Erro ao conectar com o banco de dados:', err);
     });
