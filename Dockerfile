@@ -7,13 +7,16 @@ WORKDIR /app
 # Copia arquivos de dependência
 COPY package*.json ./
 
-# Instala dependências
-RUN npm install
+# Instala dependências com cache limpo
+RUN npm ci --omit=dev
 
 # Copia o restante do projeto
 COPY . .
 
-# Expõe a porta que será definida pela variável de ambiente PORT
+# Garante que variáveis de ambiente sejam lidas no runtime
+ENV NODE_ENV=production
+
+# Expõe a porta padrão (Render define PORT automaticamente)
 EXPOSE 3000
 
 # Comando para iniciar o servidor
