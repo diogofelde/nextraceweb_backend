@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { Usuario } from '../models/Usuario.js'; // modelo Sequelize
+import User from '../models/User.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -13,22 +13,28 @@ router.post('/login', async (req, res) => {
   const { identificador, password } = req.body;
 
   try {
-    const usuario = await Usuario.findOne({
-      where: { identificador }
+    const usuario = await User.findOne({
+      where: {
+        username: identificador, // ou 'email' ou 'matricula' conforme o campo de login
+      },
     });
 
     if (!usuario) {
       return res.status(401).json({ error: 'Usuário não encontrado' });
     }
 
-    const senhaValida = await bcrypt.compare(password, usuario.senha);
+    const senhaValida = await bcrypt.compare(password, usuario.passwordHash);
 
     if (!senhaValida) {
       return res.status(401).json({ error: 'Senha incorreta' });
     }
 
     const token = jwt.sign(
-      { id: usuario.id, perfil: usuario.perfil },
+      {
+        id: usuario.id,
+        role: usuario.role,
+        permissions: usuario.permissions,
+      },
       process.env.JWT_SECRET || 'segredoPadrao',
       { expiresIn: '1h' }
     );
