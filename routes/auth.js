@@ -45,13 +45,11 @@ router.post('/register', async (req, res) => {
 
 // Rota de login
 router.post('/login', async (req, res) => {
-  const { identificador, password } = req.body;
+  const { username, password } = req.body;
 
   try {
     const usuario = await User.findOne({
-      where: {
-        username: identificador
-      }
+      where: { username }
     });
 
     if (!usuario) {
