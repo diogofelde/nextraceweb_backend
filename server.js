@@ -1,31 +1,37 @@
+// backend/server.js
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import sequelize from './config/database.js';
-import authRoutes from './routes/auth.js';
-
-dotenv.config();
+import routes from './routes/index.js'; // ajuste conforme sua estrutura
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// Middleware para interpretar JSON
 app.use(express.json());
 
-// 🔗 Rotas
-app.use('/api', authRoutes);
+// CORS configurado para seu frontend
+app.use(cors({
+  origin: 'https://nextraceweb.vercel.app',
+  credentials: false
+}));
 
-// 🩺 Rota de saúde
-app.get('/health', (req, res) => {
-    res.send('OK');
+// Headers adicionais de segurança
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  next();
 });
 
-// 🚀 Inicializa servidor e conecta ao banco
-sequelize.sync().then(() => {
-    console.log('🗄️ Banco conectado com sucesso');
-    app.listen(PORT, () => {
-        console.log(`🚀 Servidor rodando na porta ${PORT}`);
-    });
-}).catch(err => {
-    console.error('❌ Erro ao conectar ao banco:', err);
+// Rotas da aplicação
+app.use('/api', routes);
+
+// Middleware global para capturar erros não tratados
+app.use((err, req, res, next) => {
+  console.error('>>> Erro não tratado', err.stack || err.message);
+  res.status(500).json({ error: 'Erro interno do servidor' });
+});
+
+// Inicialização do servidor
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`🚀 Servidor rodando na porta ${port}`);
 });
