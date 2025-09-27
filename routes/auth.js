@@ -8,7 +8,7 @@ dotenv.config();
 
 const router = express.Router();
 
-// Rota de registro
+// 🔐 Rota de registro
 router.post('/register', async (req, res) => {
   const { username, email, matricula, password, team, permissions, role } = req.body;
 
@@ -32,7 +32,7 @@ router.post('/register', async (req, res) => {
 
     const token = jwt.sign(
       { id: newUser.id, username: newUser.username },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || 'segredoPadrao',
       { expiresIn: '1h' }
     );
 
@@ -43,7 +43,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Rota de login
+// 🔐 Rota de login
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
