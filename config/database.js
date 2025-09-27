@@ -1,23 +1,21 @@
-// config/database.js
-
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Debug temporário (remova depois de confirmar funcionamento)
-console.log('DATABASE_URL_PRESENT:', !!process.env.DATABASE_URL);
-console.log('DATABASE_URL_PREFIX:', (process.env.DATABASE_URL || '').slice(0, 40));
-
+// ✅ Conexão com banco PostgreSQL via DATABASE_URL
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false // necessário para Render
-    }
-  },
-  logging: false
+    dialect: 'postgres',
+    protocol: 'postgres',
+    logging: false,
+
+    // 🔐 Ativa SSL apenas em produção
+    dialectOptions: process.env.NODE_ENV === 'production' ? {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
+    } : {}
 });
 
 export default sequelize;

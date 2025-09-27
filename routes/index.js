@@ -1,7 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const { ping } = require('../controllers/indexController');
+import express from 'express';
+import { ping } from '../controllers/indexController.js';
 
+const router = express.Router();
+
+// Rota de teste
 router.get('/ping', ping);
 
-module.exports = router;
+export default router;

@@ -1,55 +1,51 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../config/database.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+import dotenv from 'dotenv';
 
-const User = sequelize.define('User', {
-    username: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-        validate: {
-            len: [3, 50]
+dotenv.config();
+
+const login = async (req, res) => {
+    const { email, senha } = req.body;
+
+    try {
+        // Verifica se o usuário existe
+        const usuario = await User.findOne({ where: { email } });
+
+        if (!usuario) {
+            return res.status(404).json({ mensagem: 'Usuário não encontrado' });
         }
-    },
-    email: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: true,
-        validate: {
-            isEmail: true
+
+        // Compara a senha com o hash armazenado
+        const senhaValida = await bcrypt.compare(senha, usuario.passwordHash);
+
+        if (!senhaValida) {
+            return res.status(401).json({ mensagem: 'Senha incorreta' });
         }
-    },
-    matricula: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: true
-    },
-    passwordHash: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            len: [60, 100]
-        }
-    },
-    team: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    permissions: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false
-    },
-    role: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: 'analista'
-    },
-    isActive: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
+
+        // Gera token JWT
+        const token = jwt.sign(
+            { id: usuario.id, role: usuario.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        // Retorna sucesso
+        res.json({
+            mensagem: 'Login realizado com sucesso',
+            token,
+            usuario: {
+                id: usuario.id,
+                username: usuario.username,
+                email: usuario.email,
+                role: usuario.role,
+                team: usuario.team
+            }
+        });
+    } catch (erro) {
+        console.error('Erro no login:', erro);
+        res.status(500).json({ mensagem: 'Erro interno no servidor' });
     }
-}, {
-    timestamps: true,
-    underscored: true
-});
+};
 
-export default User;
+export default { login };

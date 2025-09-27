@@ -1,5 +1,5 @@
-function ping(req, res) {
+const ping = (req, res) => {
     res.json({ status: 'ok', message: 'NexTraceWeb backend ativo.' });
-}
+};
 
-module.exports = { ping };
+export { ping };

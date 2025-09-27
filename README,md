@@ -1,0 +1,56 @@
+# 🧠 NexTraceWeb Backend
+
+API REST para autenticação, rastreamento e sanitização de dados sensíveis. Desenvolvido em Node.js com Express e Sequelize, conectado a PostgreSQL via Render.
+
+## 🚀 Tecnologias
+- Node.js + Express
+- Sequelize ORM
+- PostgreSQL (Render)
+- JWT para autenticação
+- Winston para logs
+- Express-validator para sanitização
+- Supertest + Jest para testes
+
+## 📦 Estrutura
+- `/routes` → Rotas da API
+- `/controllers` → Lógica de negócio
+- `/models` → Modelos Sequelize
+- `/middlewares` → Autenticação, permissões, logs
+- `/validators` → Validação de entrada
+- `/scripts` → Criação de usuários, testes, seed
+- `/tests` → Testes automatizados
+
+## 🔐 Segurança
+- Autenticação via JWT
+- Controle de permissões por middleware
+- Validação de entrada com express-validator
+- Variáveis sensíveis via `.env` (protegidas por `.gitignore`)
+
+## 🛠️ Rodar localmente
+
+```bash
+# Instalar dependências
+npm install
+
+# Rodar em modo desenvolvimento
+npm run dev
+
+🔧 Variáveis de ambiente (.env)
+DATABASE_URL=postgresql://usuario:senha@host:5432/nome_do_banco
+NODE_ENV=development
+JWT_SECRET=uma_chave_segura
+PORT=3000
+
+🧪 Testes
+npm run test
+
+🔑 Licenciamento
+Este backend requer chave de ativação de 25 dígitos para liberar funcionalidades completas. A validação é feita via API.
+
+🤝 Apoie este projeto
+Este sistema está sendo desenvolvido sem patrocínio, sem verba, sem equipe — apenas com dedicação e propósito.
+- 💸 Pix: diogo.felde@gmail.com
+- 🧑‍💼 GitHub Sponsors (em breve)
+- 📢 Compartilhe com sua rede
+
+---
