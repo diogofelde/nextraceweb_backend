@@ -1,0 +1,44 @@
+# Dependências
+node_modules/
+
+# Banco de dados local
+*.sqlite
+*.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Variáveis de ambiente e configurações locais
+.env
+.env.*.local
+*.local
+
+# IDEs e editores
+.vscode/
+!.vscode/extensions.json
+.idea/
+.vs/
+*.suo
+*.user
+*.vsidx
+.DS_Store
+
+# Arquivos temporários e cobertura de testes
+coverage/
+tmp/
+
+# Scripts auxiliares
+*.bat
+*.ps1
+
+# Arquivos de sistema
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Docker (se não quiser versionar)
+docker-compose.yml
