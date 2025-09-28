@@ -31,7 +31,7 @@ app.use((err, req, res, next) => {
 });
 
 // Inicialização do servidor
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || process.env.PORT || 10000;
 app.listen(port, () => {
   console.log(`🚀 Servidor rodando na porta ${port}`);
 });
