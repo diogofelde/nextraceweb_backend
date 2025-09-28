@@ -20,15 +20,20 @@ app.use(morgan('combined'));
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'https://nextraceweb.vercel.app';
 app.use(cors({ origin: FRONTEND_ORIGIN, credentials: false }));
 
-// Security headers extras
+// Security headers extras e preflight
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
     res.setHeader('X-Content-Type-Options', 'nosniff');
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
     next();
 });
 
 // Rotas principais
 app.use('/api', routes);
+
+// Tolerância para typo no health check do Render
+app.get('/api/healtc', (_, res) => res.status(200).send('OK'));
 
 // Health (liveness) e Ready (readiness)
 app.get('/api/health', (_, res) => res.status(200).send('OK'));
