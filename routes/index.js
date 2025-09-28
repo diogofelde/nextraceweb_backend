@@ -1,9 +1,9 @@
 import express from 'express';
-import { ping } from '../controllers/indexController.js';
+import authController from '../controllers/authController.js';
 
 const router = express.Router();
 
-// Rota de teste
-router.get('/ping', ping);
+// Rota de login
+router.post('/login', authController.login);
 
 export default router;
