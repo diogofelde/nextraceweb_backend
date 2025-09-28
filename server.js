@@ -1,37 +1,34 @@
-// backend/server.js
 import express from 'express';
 import cors from 'cors';
-import routes from './routes/index.js'; // ajuste conforme sua estrutura
+import routes from './routes/index.js';
 
 const app = express();
 
-// Middleware para interpretar JSON
 app.use(express.json());
 
-// CORS configurado para seu frontend
 app.use(cors({
   origin: 'https://nextraceweb.vercel.app',
   credentials: false
 }));
 
-// Headers adicionais de segurança
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   next();
 });
 
-// Rotas da aplicação
+app.get('/api/health', (req, res) => {
+  res.send('OK');
+});
+
 app.use('/api', routes);
 
-// Middleware global para capturar erros não tratados
 app.use((err, req, res, next) => {
   console.error('>>> Erro não tratado', err.stack || err.message);
   res.status(500).json({ error: 'Erro interno do servidor' });
 });
 
-// Inicialização do servidor
-const port = process.env.PORT || process.env.PORT || 10000;
+const port = process.env.PORT || 10000;
 app.listen(port, () => {
-  console.log(`🚀 Servidor rodando na porta ${port}`);
+  console.log(🚀 Servidor rodando na porta );
 });
