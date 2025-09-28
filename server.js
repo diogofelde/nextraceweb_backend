@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import routes from './routes/index.js';
-import sequelize from './config/database.js'; // Importa conexão com o banco
+import sequelize from './config/database.js';
 
 const app = express();
 
@@ -21,9 +21,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// Rota de saúde
+// Rota de saúde (uma única definição)
 app.get('/api/health', (req, res) => {
-  res.send('OK');
+  res.status(200).send('OK');
 });
 
 // Rotas principais
@@ -35,17 +35,17 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Erro interno do servidor' });
 });
 
-// Testa conexão com banco
+// Testa conexão com banco antes de iniciar o servidor
+const port = process.env.PORT || 10000;
 sequelize.authenticate()
   .then(() => {
     console.log('✅ Conectado ao banco com sucesso');
+    app.listen(port, () => {
+      console.log(`🚀 Servidor rodando na porta ${port}`);
+    });
   })
   .catch((err) => {
     console.error('❌ Erro ao conectar ao banco:', err.message);
+    // Opcional: decidir se sobe o servidor mesmo assim
+    process.exit(1);
   });
-
-// Inicia servidor
-const port = process.env.PORT || 10000;
-app.listen(port, () => {
-  console.log(`🚀 Servidor rodando na porta ${port}`);
-});
