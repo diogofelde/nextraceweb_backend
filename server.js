@@ -21,13 +21,13 @@ app.use((req, res, next) => {
     next();
 });
 
-// Rota de saúde
+// Rotas principais
+app.use('/api', routes);
+
+// Rota de saúde — mantida fora da verificação do banco
 app.get('/api/health', (req, res) => {
     res.status(200).send('OK');
 });
-
-// Rotas principais
-app.use('/api', routes);
 
 // Tratamento de erro genérico
 app.use((err, req, res, next) => {
@@ -39,23 +39,20 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 10000;
 const env = process.env.NODE_ENV || 'desconhecido';
 
-// Testa conexão com banco antes de iniciar o servidor
-sequelize.authenticate()
-    .then(() => {
-        console.log(`✅ Conectado ao banco com sucesso`);
-        console.log(`🌍 Ambiente: ${env}`);
-        app.listen(port, () => {
-            console.log(`🚀 Servidor rodando na porta ${port}`);
-        });
-    })
-    .catch((err) => {
+// Inicia servidor imediatamente
+app.listen(port, async () => {
+    console.log(`🚀 Servidor rodando na porta ${port}`);
+    console.log(`🌍 Ambiente: ${env}`);
+
+    try {
+        await sequelize.authenticate();
+        console.log('✅ Conectado ao banco com sucesso');
+    } catch (err) {
         console.error('❌ Erro ao conectar ao banco:', err.message);
         if (process.env.ALLOW_OFFLINE === 'true') {
             console.warn('⚠️ Subindo servidor mesmo sem banco (modo offline)');
-            app.listen(port, () => {
-                console.log(`🚀 Servidor rodando na porta ${port} (modo offline)`);
-            });
         } else {
             process.exit(1);
         }
-    });
+    }
+});
