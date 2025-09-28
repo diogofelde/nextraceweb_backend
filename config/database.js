@@ -4,19 +4,21 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Validação da variável de ambiente
+if (!process.env.DB_URL) {
+  throw new Error('❌ Variável DB_URL não definida. Verifique as configurações no Render.');
+}
+
 const sequelize = new Sequelize(process.env.DB_URL, {
-    dialect: 'postgres',
-    logging: false,
-    dialectOptions: {
-        ssl: {
-            require: true,
-            rejectUnauthorized: false
-        }
+  dialect: 'postgres',
+  logging: false,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
     }
+  }
 });
 
-sequelize.authenticate()
-    .then(() => console.log('✅ Conectado ao banco com sucesso'))
-    .catch(err => console.error('❌ Erro ao conectar ao banco:', err));
-
+// Exporta a instância sem autenticar aqui
 export default sequelize;
