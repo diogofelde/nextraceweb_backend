@@ -1,5 +1,5 @@
 import express from 'express';
-import authController from '../controllers/authController.js';
+import authController from '../src/controllers/authController.js';
 import autenticar from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -7,9 +7,9 @@ const router = express.Router();
 // 🔐 Login
 router.post('/login', authController.login);
 
-// 👤 Rota protegida para perfil
+// 👤 Rota protegida
 router.get('/me', autenticar, (req, res) => {
-    res.json({ usuario: req.usuario });
+  res.json({ usuario: req.usuario });
 });
 
 export default router;
