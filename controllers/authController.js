@@ -36,7 +36,8 @@ async function login(req, res) {
       return res.status(401).json({ error: 'Usuário ou senha inválidos' });
     }
 
-    const ok = bcrypt.compareSync(password, user.passwordHash);
+    // ✅ Corrigido: campo de senha é 'password' no banco
+    const ok = bcrypt.compareSync(password, user.password);
     if (!ok) {
       console.log('>>> Senha incorreta');
       return res.status(401).json({ error: 'Usuário ou senha inválidos' });
