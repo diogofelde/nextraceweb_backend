@@ -1,0 +1,21 @@
+COMMIT INSTRUCTIONS
+
+Se você quiser commitar as mudanças locais (movimento de scripts, remoção de rota debug, README), execute este comando no PowerShell dentro da pasta do backend:
+
+    cd D:\Projeto\_NexTrace_\NexTraceWeb\nextraceweb_backend
+    git add -A
+    git commit -m "move dev scripts to scripts/dev and add scripts README"
+
+Se quiser enviar para o repositório remoto (ex.: origin main):
+
+    git push origin main
+
+Alternativamente, use o script PowerShell incluído `COMMIT_CHANGES.ps1`:
+
+    # Executa commit localmente
+    .\COMMIT_CHANGES.ps1
+
+    # Executa commit e faz push
+    .\COMMIT_CHANGES.ps1 -Push
+
+Observação: esse ambiente não tem `git` disponível para eu executar remotamente; por isso é necessário rodar os comandos localmente.

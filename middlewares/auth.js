@@ -1,7 +1,4 @@
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { verifyToken } from '../utils/jwtUtils.js';
 
 const autenticar = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -13,7 +10,7 @@ const autenticar = (req, res, next) => {
     const [, token] = authHeader.split(' ');
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'segredoPadrao');
+        const decoded = verifyToken(token);
         req.usuario = decoded;
         next();
     } catch (erro) {
